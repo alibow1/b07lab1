@@ -1,45 +1,61 @@
 public class Polynomial {
-    private double[] coefficients;
+    double[] coefficients;
 
-    // No-arg constructor: sets polynomial to zero
     public Polynomial() {
-        this.coefficients = new double[]{0.0};
+        coefficients = new double[1];
+        coefficients[0] = 0.0;
     }
 
-    // Constructor: accepts array of coefficients
-    public Polynomial(double[] coefficients) {
-        // Defensive copy to avoid aliasing
-        this.coefficients = new double[coefficients.length];
-        for (int i = 0; i < coefficients.length; i++) {
-            this.coefficients[i] = coefficients[i];
+    public Polynomial(double[] inputCoefficients) {
+        coefficients = new double[inputCoefficients.length];
+        for (int i = 0; i < inputCoefficients.length; i++) {
+            coefficients[i] = inputCoefficients[i];
         }
     }
 
-    // Add another Polynomial to this one
     public Polynomial add(Polynomial other) {
-        int maxLength = Math.max(this.coefficients.length, other.coefficients.length);
+        int maxLength;
+        if (coefficients.length > other.coefficients.length) {
+            maxLength = coefficients.length;
+        } else {
+            maxLength = other.coefficients.length;
+        }
+
         double[] sum = new double[maxLength];
 
         for (int i = 0; i < maxLength; i++) {
-            double a = i < this.coefficients.length ? this.coefficients[i] : 0.0;
-            double b = i < other.coefficients.length ? other.coefficients[i] : 0.0;
-            sum[i] = a + b;
+            double value1 = 0.0;
+            if (i < coefficients.length) {
+                value1 = coefficients[i];
+            }
+
+            double value2 = 0.0;
+            if (i < other.coefficients.length) {
+                value2 = other.coefficients[i];
+            }
+
+            sum[i] = value1 + value2;
         }
 
         return new Polynomial(sum);
     }
 
-    // Evaluate the polynomial at x
     public double evaluate(double x) {
         double result = 0.0;
+
         for (int i = 0; i < coefficients.length; i++) {
-            result += coefficients[i] * Math.pow(x, i);
+            double term = coefficients[i] * Math.pow(x, i);
+            result = result + term;
         }
         return result;
     }
 
-    // Check if x is a root (i.e., f(x) == 0)
     public boolean hasRoot(double x) {
-        return evaluate(x) == 0.0;
+        double value = evaluate(x);
+        if (value == 0.0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
